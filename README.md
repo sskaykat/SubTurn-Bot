@@ -3,8 +3,9 @@
 - 一个订阅转换 telegram bot，把订阅连接转换成 clash meta 格式
 - 你也可以自己修改配置文件 `config.yaml` 预设想要的分流规则
 - 自建 `bot` 修改 `token.txt` 中的 `BOT_TOKEN`
+- 运行 `bot：` `python bot.py`
 - 默认规则预览：
-
+- 配置文件中 `Warp` 用来实现链式代理
 
 <div style="display: flex; justify-content: space-between;">
   <img src="https://bed.ssmao.eu.org/file/1733044171403_clash-verge_HfWDXWWf10.png" alt="图片1" style="width: 45%;"/>
@@ -13,5 +14,4 @@
 
 
 
-- 运行 `bot：`
-  > python bot.py
+
