@@ -1,0 +1,7 @@
+version: '3'
+services:
+  onebot:
+    image: taohuajiu/sub2clash:latest
+    container_name: sub2clashbot
+    volumes:
+      - /dockerapp/SubTurn-Bot:/sub2clashbot 
