@@ -4,6 +4,33 @@
 - 你也可以自己修改配置文件 `config.yaml` 预设想要的分流规则
 - 自建 `bot` 修改 `token.txt` 中的 `BOT_TOKEN`
 - 运行 `bot：` `python bot.py`
+- 在 `docker` 中使用，执行命令：
+- /dockerapp/SubTurn-Bot 可自行替换成想映射的本地目录
+
+`git clone https://github.com/sskaykat/SubTurn-Bot.git`
+
+`cd SubTurn-Bot`
+
+```
+docker run -d \
+  --name sub2clashbot \
+  -v /dockerapp/SubTurn-Bot:/sub2clashbot \
+  taohuajiu/sub2clash:latest
+```
+
+- 使用 `docker-compose` 部署，创建 `docker-compose.yaml`文件(如下)
+- 运行 `docker-compose up -d`
+
+```
+version: '3'
+services:
+  onebot:
+    image: taohuajiu/sub2clash:latest
+    container_name: sub2clashbot
+    volumes:
+      - /dockerapp/SubTurn-Bot:/sub2clashbot
+```
+
 - 默认规则预览：
 - 配置文件中 `Warp` 用来实现链式代理
 
