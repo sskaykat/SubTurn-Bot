@@ -3,13 +3,13 @@ import yaml
 import os
 from datetime import datetime
 
-# 从 config.txt 中读取 BOT_TOKEN
+# 从 token.txt 中读取 BOT_TOKEN
 def get_bot_token(config_file="token.txt"):
     try:
         with open(config_file, 'r', encoding='utf-8') as file:
             token = file.read().strip()
             if not token or ":" not in token:
-                raise ValueError("Token 格式无效或为空，请检查 config.txt 文件")
+                raise ValueError("Token 格式无效或为空，请检查 token.txt 文件")
             return token
     except Exception as e:
         print(f"读取 Bot Token 时发生错误: {e}")
@@ -45,7 +45,7 @@ def update_proxy_url_and_path(config_file_path, new_url):
                     provider['url'] = new_url
                     print(f"URL 已更新为: {new_url}")
                 if 'path' in provider:
-                    new_path = generate_time_based_filename(prefix="ClashMeta")
+                    new_path = generate_time_based_filename(prefix="clashmeta")
                     provider['path'] = f"./{new_path}"
                     print(f"path 已更新为: {new_path}")
         
@@ -86,9 +86,16 @@ def handle_message(message):
     if updated_file_path:
         bot.reply_to(message, "配置文件已更新！正在发送新文件...")
         
-        # 发送更新后的文件
-        with open(updated_file_path, 'rb') as file:
-            bot.send_document(message.chat.id, file)
+        try:
+            # 发送更新后的文件
+            with open(updated_file_path, 'rb') as file:
+                bot.send_document(message.chat.id, file)
+            
+            # 删除文件
+            os.remove(updated_file_path)
+            print(f"文件 {updated_file_path} 已成功删除。")
+        except Exception as e:
+            bot.reply_to(message, f"发送或删除文件时发生错误：{e}")
     else:
         bot.reply_to(message, "更新配置文件时发生错误，请检查日志。")
 
