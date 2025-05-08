@@ -50,138 +50,157 @@ proxies:
 proxy-providers:
   subscription:
     type: http
-    url: https://t.daohua.eu.org/d/90.txt
+    url: https://52pokemon.xz61.cn/api/v1/client/subscribe?token=56618af15ceacb63b7a67c925722d708
     interval: 172800
-    path: ./clashmeta_20250215_031251.yaml
+    path: ./clashmeta_20250501_062400.yaml
     health-check:
       enable: true
       interval: 600
       lazy: true
       url: http://www.gstatic.com/generate_204
-
-# 1. 定义策略组
 proxy-groups:
-  - name: 🚀 节点选择
-    type: select
-    proxies:
-    - ⚡ 自动选择
-    -  🪁 手动选择
-    - ☁️ WARP
-  - name: 🌰 WARP前置
-    type: select
-    proxies:
-    - ⚡ 自动选择
-    - 🪁 手动选择
-    use:
-    - subscription
-  - name: ⚡ 自动选择
-    type: url-test
-    use:
-    - subscription
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-    lazy: false
-  - name: 🪁 手动选择
-    type: select
-    use:
-    - subscription
-  - name: 🔍 谷歌服务
-    type: select
-    proxies:
-    - 🚀 节点选择
-    use:
-    - subscription
-  - name: 🤖 OpenAI
-    type: select
-    proxies:
-    - 🚀 节点选择
-    use:
-    - subscription
-  - name: 📲 电报消息
-    type: select
-    proxies:
-    - 🚀 节点选择
-    use:
-    - subscription
-  - name: 🌐 社交媒体
-    type: select
-    proxies:
-    - 🚀 节点选择
-    use:
-    - subscription
-  - name: 🎬 流媒体
-    type: select
-    proxies:
-    - 🚀 节点选择
-    use:
-    - subscription
-  - name: 🍃 FANZA动画
-    type: select
-    proxies:
-    - 🚀 节点选择
-    use:
-    - subscription
-  - name: 🐱 Github
-    type: select
-    proxies:
-    - 🚀 节点选择
-    use:
-    - subscription
-  # 国内直连策略组
-  - name: "🔒 国内服务"
-    type: select
-    proxies:
-      - DIRECT
-      - REJECT 
-      - 🚀 节点选择
-
-  # 广告拦截策略组（可选是否拦截）
-  - name: "🛑 广告拦截"
-    type: select
-    proxies:
-      - REJECT
-      - DIRECT
-      - 🚀 节点选择 
-
-# 2. 引用广告规则集
+- name: 🚀 节点选择
+  type: select
+  proxies:
+  - ⚡ 自动选择
+  - 🪁 手动选择
+  - ☁️ 负载均衡(轮询)
+  - ⚖️ 负载均衡(散列)
+  - ☁️ WARP
+- name: 🌰 WARP前置
+  type: select
+  proxies:
+  - ⚡ 自动选择
+  - 🪁 手动选择
+  use:
+  - subscription
+- name: ⚡ 自动选择
+  type: url-test
+  use:
+  - subscription
+  url: https://www.gstatic.com/generate_204
+  interval: 300
+  lazy: false
+- name: 🪁 手动选择
+  type: select
+  use:
+  - subscription
+- name: ☁️ 负载均衡(轮询)
+  type: load-balance
+  strategy: round-robin
+  use:
+  - subscription
+  exclude-filter: '^(?:webshare)$' # 排除落地节点 (根据脚本逻辑添加)
+  icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/balance.svg
+  # --- groupBaseOption 展开 ---
+  interval: 0 # load-balance 通常有自己的健康检查间隔
+  timeout: 3000
+  url: https://www.google.com/generate_204 # load-balance 的健康检查地址
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+- name: ⚖️ 负载均衡(散列)
+  type: load-balance
+  strategy: consistent-hashing
+  use:
+  - subscription
+  exclude-filter: '^(?:webshare)$' # 排除落地节点 (根据脚本逻辑添加)
+  icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg
+  # --- groupBaseOption 展开 ---
+  interval: 0 # load-balance 通常有自己的健康检查间隔
+  timeout: 3000
+  url: https://www.google.com/generate_204 # load-balance 的健康检查地址
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+- name: 🔍 谷歌服务
+  type: select
+  proxies:
+  - 🚀 节点选择
+  use:
+  - subscription
+- name: 🤖 OpenAI
+  type: select
+  proxies:
+  - 🚀 节点选择
+  use:
+  - subscription
+- name: 📲 电报消息
+  type: select
+  proxies:
+  - 🚀 节点选择
+  use:
+  - subscription
+- name: 🌐 社交媒体
+  type: select
+  proxies:
+  - 🚀 节点选择
+  use:
+  - subscription
+- name: 🎬 流媒体
+  type: select
+  proxies:
+  - 🚀 节点选择
+  use:
+  - subscription
+- name: 🍃 FANZA动画
+  type: select
+  proxies:
+  - 🚀 节点选择
+  use:
+  - subscription
+- name: 🐱 Github
+  type: select
+  proxies:
+  - 🚀 节点选择
+  use:
+  - subscription
+- name: 🔒 国内服务
+  type: select
+  proxies:
+  - DIRECT
+  - REJECT
+  - 🚀 节点选择
+- name: 🛑 广告拦截
+  type: select
+  proxies:
+  - REJECT
+  - DIRECT
+  - 🚀 节点选择
 rule-providers:
   adguard:
     type: http
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt  # AdGuard 规则
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt
     path: ./ruleset/reject.txt
-    interval: 86400  # 每天更新
-    
+    interval: 86400
   adblock:
     type: http
     behavior: domain
     format: yaml
     url: https://raw.githubusercontent.com/REIJI007/AdBlock_Rule_For_Clash/main/adblock_reject.yaml
     path: ./ruleset/adblock_reject.yaml
-    interval: 86400    
-
-# 3. 定义规则（关键！）
+    interval: 86400
 rules:
-  # 优先匹配广告规则
-  - GEOSITE,google,🔍 谷歌服务
-  - GEOIP,google,🔍 谷歌服务
-  - GEOIP,telegram,📲 电报消息
-  - GEOSITE,openai,🤖 OpenAI
-  - GEOSITE,github,🐱 Github
-  - GEOSITE,gitlab,🐱 Github
-  - GEOSITE,facebook,🌐 社交媒体
-  - GEOSITE,instagram,🌐 社交媒体
-  - GEOSITE,twitter,🌐 社交媒体
-  - GEOSITE,tiktok,🌐 社交媒体
-  - GEOSITE,linkedin,🌐 社交媒体
-  - GEOSITE,netflix,🎬 流媒体
-  - GEOSITE,hulu,🎬 流媒体
-  - GEOSITE,disney,🎬 流媒体
-  - GEOSITE,hbo,🎬 流媒体
-  - GEOSITE,amazon,🎬 流媒体
-  - DOMAIN,dmm.co.jp,🍃 FANZA动画
-  - RULE-SET,adguard,🛑 广告拦截
-  - RULE-SET,adblock,🛑 广告拦截
-  - GEOSITE,cn,🔒 国内服务
-  - GEOIP,cn,🔒 国内服务
-  - MATCH,🚀 节点选择
+- GEOSITE,google,🔍 谷歌服务
+- GEOIP,google,🔍 谷歌服务
+- GEOIP,telegram,📲 电报消息
+- GEOSITE,openai,🤖 OpenAI
+- GEOSITE,github,🐱 Github
+- GEOSITE,gitlab,🐱 Github
+- GEOSITE,facebook,🌐 社交媒体
+- GEOSITE,instagram,🌐 社交媒体
+- GEOSITE,twitter,🌐 社交媒体
+- GEOSITE,tiktok,🌐 社交媒体
+- GEOSITE,linkedin,🌐 社交媒体
+- GEOSITE,netflix,🎬 流媒体
+- GEOSITE,hulu,🎬 流媒体
+- GEOSITE,disney,🎬 流媒体
+- GEOSITE,hbo,🎬 流媒体
+- GEOSITE,amazon,🎬 流媒体
+- DOMAIN,dmm.co.jp,🍃 FANZA动画
+- RULE-SET,adguard,🛑 广告拦截
+- RULE-SET,adblock,🛑 广告拦截
+- GEOSITE,cn,🔒 国内服务
+- GEOIP,cn,🔒 国内服务
+- MATCH,🚀 节点选择
